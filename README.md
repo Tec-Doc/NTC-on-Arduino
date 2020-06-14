@@ -9,9 +9,9 @@ NTC mit einer Seite an Vcc (bzw. wenn Aref anders gewählt wird an Quelle von Ar
 andere Seite an analog Port und von analog Port Widerstand R2 an GND.                 
  
 VCC---(NTC)---*---(R2)---GND                                                          
-              |
-              |
-         analog Port
+.             |
+.             |
+.        analog Port
  
 Die Genauigkeit ist abhängig von der Stabilität von VCC und der Angabe ADCref.        
 Man kann VCC im obigen Beispiel durch eine Referenzspannungsquelle ersetzen und    
