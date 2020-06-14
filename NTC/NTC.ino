@@ -1,40 +1,41 @@
 /*****************************************************************************************
- * NTC mit Arduino auswerten und Temperatur berechnen.                                   *
- * --------------------------------------------------------------------------------------*
- * Ausgabe Seriell mit 9600 Baud                                                         *
- * --------------------------------------------------------------------------------------*
- * NTC mit einer Seite an Vcc (bzw. wenn Aref anders gewählt wird an Quelle von Aref)    *
- * andere Seite an analog Port und von analog Port Widerstand R2 an GND.                 *
+   NTC mit Arduino auswerten und Temperatur berechnen.
+   --------------------------------------------------------------------------------------
+   Ausgabe Seriell mit 9600 Baud
+   --------------------------------------------------------------------------------------
+   NTC mit einer Seite an Vcc (bzw. wenn Aref anders gewählt wird an Quelle von Aref)
+   andere Seite an analog Port und von analog Port Widerstand R2 an GND.
  *                                                                                       *
- * VCC---(NTC)---*---(R2)---GND                                                          *
- *               |                                                                       *
- *               |                                                                       *
- *           analog Port                                                                 *
+   VCC---(NTC)---*---(R2)---GND
+                 |
+                 |
+             analog Port
  *                                                                                       *
- * Die Genauigkeit ist abhängig von der Stabilität von VCC und der Angabe ADCref.        *
- * Man kann VCC im obigen Beispiel durch eine Referenzspannungsquelle ersetzen und       *
- * diese dann auch als Aref verwenden. ADCref ist entsprechend anzupassen.               *
- *---------------------------------------------------------------------------------------*
- *  (C) 2020 14th of June   Dr.sc. Klaus Helmgens, M.I.T., USA                           *
- *  This example code is in the public domain an can be used free as long as the         *
- *  usage is non comercial.                                                              * 
+   Die Genauigkeit ist abhängig von der Stabilität von VCC und der Angabe ADCref.
+   Man kann VCC im obigen Beispiel durch eine Referenzspannungsquelle ersetzen und
+   diese dann auch als Aref verwenden. ADCref ist entsprechend anzupassen.
+  ---------------------------------------------------------------------------------------
+    (C) 2020 14th of June   Dr.sc. Klaus Helmgens, M.I.T., USA
+    This example code is in the public domain an can be used free as long as the
+    usage is non comercial.
  *****************************************************************************************/
 
 
-const float Tr = 298.15; // Referenz Temperature in Kelvin (25°C)
-const float B = 3528; // B-Wert des NTC
-const float Rr = 1500; // Referenz Widerstand bei Referenz Temperature
-const float R2 = 10000; // Widerstand im Spannungsteiler mit NTC gegen GND
-const float ADCref = 5.00; // Referenzspannung des ADC am Aref Eingang !Dezimalpunkt ist wichtig!
-
+const float Tr = 298.15;            // Referenz Temperature in Kelvin (25°C)
+const float B = 3528;               // B-Wert des NTC
+const float Rr = 1500;              // Referenz Widerstand bei Referenz Temperature
+const float R2 = 10000;             // Widerstand im Spannungsteiler mit NTC gegen GND
+const float ADCref = 5.00;          // Referenzspannung des ADC am Aref Eingang !!!Dezimalpunkt ist wichtig, sonst wird float in Folge als int behandelt!!!
+const int ADCport = 0;              // Genutzer ADC-Port. In diesem Fall 0 (A0)
+ 
 void setup() {
   Serial.begin(9600);
-  pinMode(A0, INPUT);
-  // analogReference(EXTERNAL); // Wenn Aref mit anderer Spannung statt AVcc genutzt wird.
+  pinMode(A0, INPUT);               // Bei abweichenden ADCport muss hier entsprechend angepasst werden!
+  // analogReference(EXTERNAL);     // Wenn Aref mit anderer Spannung statt AVcc genutzt wird.
 }
 
 void loop() {
-  float Rn = widerstand(0);
+  float Rn = widerstand(ADCport);
   float Tn = temperature(Rn);
   Serial.print("Widerstand des NTC = ");
   Serial.print(Rn);
